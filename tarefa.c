@@ -17,9 +17,10 @@
 
 struct tarefas {
 	int id;     /*!< Identificador numérico da tarefa. */
-	int C;      /*!< Tempo de computação da tarefa. */
+	int CPU;      /*!< Tempo de computação da tarefa. */
 	int T;      /*!< Período da tarefa. */
-	float U;    /*!< Utilização, razão C/T, da tarefa. */
+	int Tipo;
+	float Peso;    /*!< Utilização, razão C/T, da tarefa. */
 };
 
 
@@ -88,7 +89,7 @@ lista_enc_t * importar_csv_linkedList(char *nome_arquivo){
 
 	char buffer[32];
 	FILE *fp = fopen(nome_arquivo, "r");
-	int id, C, T;
+	int id, CPU, T, Tipo;
 	int linha = 2;
 
 	if (!fp){
@@ -109,9 +110,9 @@ lista_enc_t * importar_csv_linkedList(char *nome_arquivo){
 
 	while (fgets(buffer, 32, fp) != NULL){
 
-		int ret = sscanf(buffer, "T%d;%d;%d", &id, &C, &T);
+		int ret = sscanf(buffer, "T%d;%d;%d;%d", &id, &CPU, &T, &Tipo);
 
-		if (ret != 3){
+		if (ret != 4){
 			fprintf(stderr, "Erro lendo %s em linha %d\n", nome_arquivo, linha);
 		}
 
@@ -119,7 +120,7 @@ lista_enc_t * importar_csv_linkedList(char *nome_arquivo){
 		printf("id: %d\n", id);
 #endif
 
-		tarefa_t *tarefa = cria_tarefa(id,C,T);
+		tarefa_t *tarefa = cria_tarefa(id,CPU,T,Tipo);
 		no_t *no = cria_no(tarefa);
 
 		add_cauda(lista_tarefas, no);
@@ -139,7 +140,7 @@ lista_enc_t * importar_csv_linkedList(char *nome_arquivo){
   *
   * @retval tarefa_t *: nova tarefa criada dinamicamente.
   */
-tarefa_t *cria_tarefa(int id, int C, int T){
+tarefa_t *cria_tarefa(int id, int CPU, int T, int Tipo){
 
 	tarefa_t *tarefa = malloc(sizeof(tarefa_t));
 
@@ -149,9 +150,10 @@ tarefa_t *cria_tarefa(int id, int C, int T){
 	}
 
 	tarefa->id  = id;
-	tarefa->C = C;
+	tarefa->CPU = CPU;
 	tarefa->T = T;
-	tarefa->U = (float)C/T;
+	tarefa->Tipo = Tipo;
+	tarefa->Peso = (float)(CPU*Tipo)/(T*100);
 
 	return tarefa;
 }
@@ -172,8 +174,8 @@ int tarefa_obter_id (tarefa_t *tarefa){
 
   * @retval int: tempo de computação.
   */
-int tarefa_obter_C (tarefa_t *tarefa){
-	return tarefa->C;
+int tarefa_obter_CPU (tarefa_t *tarefa){
+	return tarefa->CPU;
 }
 
 /**
@@ -187,13 +189,23 @@ int tarefa_obter_T (tarefa_t *tarefa){
 }
 
 /**
+  * @brief  Retorna tipo.
+  * @param	tarefa: referência da tarefa em questão.
+
+  * @retval int: período.
+  */
+int tarefa_obter_Tipo (tarefa_t *tarefa){
+	return tarefa->Tipo;
+}
+
+/**
   * @brief  Retorna a utilização da tarefa.
   * @param	tarefa: referência da tarefa em questão.
 
   * @retval float: utilização.
   */
-float tarefa_obter_U (tarefa_t *tarefa){
-	return tarefa->U;
+float tarefa_obter_Peso (tarefa_t *tarefa){
+	return tarefa->Peso;
 }
 
 /**
@@ -228,16 +240,17 @@ void imprimir_lista_tarefas(lista_enc_t *lista){
 
 	no_t *no;
 	puts("----- lista enc -----------");
-	printf("[id]\t[C]\t[T]\t[U]\n");
+	printf("[id]\t[CPU]\t[T]\t[Tipo]\t[Peso]\n");
 
 	no= obter_cabeca(lista);
 	while (no){
 
 		tarefa_t *tarefa = obter_dado(no);
 
-		printf("%d\t%d\t%d\t%f\n", tarefa_obter_id(tarefa),
-				tarefa_obter_C(tarefa), tarefa_obter_T(tarefa),
-				tarefa_obter_U(tarefa));
+		printf("%d\t%d\t%d\t%d\t%f\n", tarefa_obter_id(tarefa),
+				tarefa_obter_CPU(tarefa), tarefa_obter_T(tarefa),
+                tarefa_obter_Tipo(tarefa),
+				tarefa_obter_Peso(tarefa));
 
 
 		no = obter_proximo(no);
@@ -256,11 +269,12 @@ void imprimir_vetor(tarefa_t **vetor, int tam) {
 	int i;
 
 	puts("----- vetor -----------");
-	printf("Tarefas no vetor de ponteiros: %d\n[id]\t[C]\t[T]\t[U]\n", tam);
+	printf("Tarefas no vetor de ponteiros: %d\n[id]\t[CPU]\t[T]\t[Tipo]\t[Peso]\n", tam);
 	for (i=0; i < tam; i++)
-		printf("%d\t%d\t%d\t%f\n", tarefa_obter_id(vetor[i]),
-				tarefa_obter_C(vetor[i]),
+		printf("%d\t%d\t%d\t%d\t%f\n", tarefa_obter_id(vetor[i]),
+				tarefa_obter_CPU(vetor[i]),
 				tarefa_obter_T(vetor[i]),
-				tarefa_obter_U(vetor[i]));
+                tarefa_obter_Tipo(vetor[i]),
+				tarefa_obter_Peso(vetor[i]));
 	puts("----------------");
 }

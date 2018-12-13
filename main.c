@@ -28,27 +28,28 @@ int main(){
     n_tarefas = obter_tamanho(lista_tarefas);
     vetor = lista_para_vetor(lista_tarefas, n_tarefas);
     heap = cria_heap(n_tarefas);
+    imprimir_vetor(vetor, n_tarefas);
 
-    for(x=0; x<10; x++)
+    for(x=0; x<2; x++)
     {
         srand(getpid() ^ time(NULL));
-        for(n=0; n<5; n++)
+        for(n=0; n<10; n++)
         {
             i = rand() % n_tarefas;
             add_heap(heap, vetor[i]);
         }
 
         n = obter_tamanho_heap(heap);
-        //imprimir_heap(heap, n);
+        imprimir_heap(heap, n);
 
         build_heap(heap, n);
         imprimir_heap(heap, n);
-        sleep(2);
+        sleep(1);
 
         retira_heap(heap, n);
         n = obter_tamanho_heap(heap);
         imprimir_heap(heap, n);
-        sleep(3);
+        sleep(1);
 
     }
 
@@ -58,7 +59,7 @@ int main(){
         retira_heap(heap, n);
         n = obter_tamanho_heap(heap);
         imprimir_heap(heap, n);
-        sleep(2);
+        sleep(1);
     }
 
     retira_heap(heap, n);
@@ -67,7 +68,6 @@ int main(){
     libera_lista_tarefas(lista_tarefas);
     free(vetor);
     free(heap);
-
 
 	return 0;
 }

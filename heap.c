@@ -80,7 +80,7 @@ void retira_heap(heap_t *h, int tam)
         h->total = tam;
     }
 
-    printf("\nTarefa %d executada: U = %f\n\n", tarefa_obter_id(h->vetor[0]), tarefa_obter_U(h->vetor[0]));
+    printf("\nTarefa %d executada: Peso = %f\n\n", tarefa_obter_id(h->vetor[0]), tarefa_obter_Peso(h->vetor[0]));
     h->vetor[0] = h->vetor[tam-1];
     h->tam--;
     tam = h->tam;
@@ -99,12 +99,13 @@ void imprimir_heap(heap_t *h, int tam){
 	int i;
 
 	puts("----- heap -----------");
-	printf("Tarefas no heap de ponteiros: %d\n[id]\t[C]\t[T]\t[U]\n", tam);
+	printf("Tarefas no heap de ponteiros: %d\n[id]\t[CPU]\t[T]\t[Tipo]\t[Peso]\n", tam);
 	for (i=0; i < tam; i++)
-		printf("%d\t%d\t%d\t%f\n", tarefa_obter_id(h->vetor[i]),
-				tarefa_obter_C(h->vetor[i]),
+		printf("%d\t%d\t%d\t%d\t%f\n", tarefa_obter_id(h->vetor[i]),
+				tarefa_obter_CPU(h->vetor[i]),
 				tarefa_obter_T(h->vetor[i]),
-				tarefa_obter_U(h->vetor[i]));
+                tarefa_obter_Tipo(h->vetor[i]),
+				tarefa_obter_Peso(h->vetor[i]));
 	puts("----------------");
 }
 
@@ -127,10 +128,10 @@ void max_heapfy(heap_t *h, int i, int k)
     {
         if(j < k)
         {
-            if(tarefa_obter_U(h->vetor[j]) < tarefa_obter_U(h->vetor[j+1]))
+            if(tarefa_obter_Peso(h->vetor[j]) < tarefa_obter_Peso(h->vetor[j+1]))
                 j++;
         }
-        if(tarefa_obter_U(h->vetor[i]) < tarefa_obter_U(h->vetor[j]))
+        if(tarefa_obter_Peso(h->vetor[i]) < tarefa_obter_Peso(h->vetor[j]))
         {
             h -> vetor[i] = h -> vetor[j];
             i = j;

@@ -20,12 +20,13 @@ void imprimir_vetor(tarefa_t **vetor, int tam);
 
 lista_enc_t * importar_csv_linkedList(char *nome);
 
-tarefa_t *cria_tarefa(int id, int C, int T);
+tarefa_t *cria_tarefa(int id, int CPU, int T, int Tipo);
 
 int tarefa_obter_id (tarefa_t *tarefa);
-int tarefa_obter_C (tarefa_t *tarefa);
+int tarefa_obter_CPU (tarefa_t *tarefa);
 int tarefa_obter_T (tarefa_t *tarefa);
-float tarefa_obter_U (tarefa_t *tarefa);
+int tarefa_obter_Tipo (tarefa_t *tarefa);
+float tarefa_obter_Peso (tarefa_t *tarefa);
 
 void libera_lista_tarefas(lista_enc_t *lista);
 void imprimir_lista_tarefas(lista_enc_t *lista);
